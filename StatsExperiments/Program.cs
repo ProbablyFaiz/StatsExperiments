@@ -16,6 +16,8 @@ namespace StatsExperiments
 
         static void RunRScript(string scriptFilePath, string dataFilePath)
         {
+            var watch = new Stopwatch();
+            watch.Start();
             var startInfo = new ProcessStartInfo("/usr/local/bin/rscript")
             {
                 RedirectStandardInput = true,
@@ -28,10 +30,11 @@ namespace StatsExperiments
             var process = new Process {StartInfo = startInfo};
             process.Start();
 
-            // var data = File.ReadAllText(dataFilePath);
-            // var streamWriter = process.StandardInput;
-            // streamWriter.WriteLine(data);
-
+            var data = File.ReadAllText(dataFilePath);
+            var streamWriter = process.StandardInput;
+            streamWriter.WriteLine(data);
+            streamWriter.Close();
+            
             var output = process.StandardOutput;
             var error = process.StandardError;
 
@@ -40,6 +43,9 @@ namespace StatsExperiments
             var record = reader.GetRecord<dynamic>() as IDictionary<string, object>;
             if (record == null)
                 return;
+            watch.Stop();
+            Console.WriteLine("Time: {0}", watch.ElapsedMilliseconds);
+            
             Console.WriteLine("r-squared: {0}", record["r-squared"]);
             Console.WriteLine("adjusted r-squared: {0}", record["adjusted-r-squared"]);
             Console.WriteLine("f-statistic: {0}", record["f-statistic"]);

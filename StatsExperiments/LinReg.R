@@ -1,7 +1,8 @@
 # Created by: faiz
 # Created on: 3/19/20
 
-regData <- read.csv('TestData.csv')
+csvData <- readLines("stdin",n=-1)
+regData <- read.csv(text = csvData)
 lReg <- lm(Input~Output, data=regData)
 info <- summary(lReg)
 cat(paste("r-squared", "adjusted-r-squared", "f-statistic", sep=","))

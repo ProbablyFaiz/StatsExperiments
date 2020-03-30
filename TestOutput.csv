@@ -1,0 +1,6 @@
+r-squared,adjusted-r-squared,f-statistic,f-statistic-p-value,rmse,median-residual
+0.9981201,0.9981158,233086.1,0,0.1255211,-0.02723404
+
+Term,Coefficient,P-value,t-statistic,Standard Error
+(Intercept),-0.1744681,1.125993e-30,-12.4481,0.01401565
+Input,2.067234,0,482.7899,0.00428185

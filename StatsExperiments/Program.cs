@@ -18,37 +18,41 @@ namespace StatsExperiments
         {
             var watch = new Stopwatch();
             watch.Start();
-            var startInfo = new ProcessStartInfo("/usr/local/bin/rscript")
+            var startInfo = new ProcessStartInfo(@"C:\Program Files\R\R-3.6.3\bin\x64\rscript.exe")
             {
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
-                Arguments = "LinReg.R"
+                Arguments = $"{scriptFilePath} {dataFilePath}"
             };
 
-            var process = new Process {StartInfo = startInfo};
+            var process = new Process { StartInfo = startInfo };
             process.Start();
 
-            var data = File.ReadAllText(dataFilePath);
-            var streamWriter = process.StandardInput;
-            streamWriter.WriteLine(data);
-            streamWriter.Close();
+            // var data = File.ReadAllText(dataFilePath);
+            // var streamWriter = process.StandardInput;
+            // streamWriter.WriteLine(dataFilePath);
+            // streamWriter.Close();
             
             var output = process.StandardOutput;
             var error = process.StandardError;
 
-            var reader = new CsvReader(output, CultureInfo.InvariantCulture);
-            reader.Read();
-            var record = reader.GetRecord<dynamic>() as IDictionary<string, object>;
-            if (record == null)
-                return;
+            var outputStr = output.ReadToEnd();
             watch.Stop();
             Console.WriteLine("Time: {0}", watch.ElapsedMilliseconds);
+            Console.WriteLine(outputStr);
+
+            /*var reader = new CsvReader(output, CultureInfo.InvariantCulture);
+            reader.Read();
+            var dynamicRecord = reader.GetRecord<dynamic>();
+            var record = dynamicRecord as IDictionary<string, object>;
+            if (record == null)
+                return;
             
             Console.WriteLine("r-squared: {0}", record["r-squared"]);
             Console.WriteLine("adjusted r-squared: {0}", record["adjusted-r-squared"]);
-            Console.WriteLine("f-statistic: {0}", record["f-statistic"]);
+            Console.WriteLine("f-statistic: {0}", record["f-statistic"]);*/
         }
     }
 }
